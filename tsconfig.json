@@ -6,18 +6,26 @@
     "noEmit": true,
     "skipLibCheck": true,
     "useDefineForClassFields": true,
-
     /* modules */
     "module": "ESNext",
     "isolatedModules": true,
     "resolveJsonModule": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-
     /* type checking */
     "strict": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@shadcn/*": ["./src/components/ui/*"],
+      "@utils/*": ["./src/lib/*"],
+      "@lib/*": ["./src/shared/lib/*"],
+      "@components/*": ["./src/shared/components/*"],
+      "@hooks/*": ["./src/shared/hooks/*"],
+      "@types/*": ["./src/shared/types/*"]
+    }
   },
   "include": ["src"]
 }
