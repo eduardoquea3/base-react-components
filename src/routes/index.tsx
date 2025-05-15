@@ -5,5 +5,5 @@ export const Route = createFileRoute("/")({
 })
 
 function RouteComponent() {
-  return <div className="min-h-screen w-full bg-black text-white">NONE</div>
+  return <div className="min-h-screen w-full">NONE</div>
 }
