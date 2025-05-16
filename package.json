@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@radix-ui/react-scroll-area": "^1.2.8",
+    "@radix-ui/react-slot": "^1.2.2",
     "@tanstack/react-router": "^1.120.3",
     "@tanstack/react-router-devtools": "^1.120.3",
     "@tanstack/react-table": "^8.21.3",
