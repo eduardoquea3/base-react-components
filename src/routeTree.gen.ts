@@ -11,10 +11,24 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as TanstackFormImport } from './routes/tanstack-form'
+import { Route as ReactHookFormImport } from './routes/react-hook-form'
 import { Route as ControlsImport } from './routes/controls'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const TanstackFormRoute = TanstackFormImport.update({
+  id: '/tanstack-form',
+  path: '/tanstack-form',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ReactHookFormRoute = ReactHookFormImport.update({
+  id: '/react-hook-form',
+  path: '/react-hook-form',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ControlsRoute = ControlsImport.update({
   id: '/controls',
@@ -46,6 +60,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ControlsImport
       parentRoute: typeof rootRoute
     }
+    '/react-hook-form': {
+      id: '/react-hook-form'
+      path: '/react-hook-form'
+      fullPath: '/react-hook-form'
+      preLoaderRoute: typeof ReactHookFormImport
+      parentRoute: typeof rootRoute
+    }
+    '/tanstack-form': {
+      id: '/tanstack-form'
+      path: '/tanstack-form'
+      fullPath: '/tanstack-form'
+      preLoaderRoute: typeof TanstackFormImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -54,36 +82,46 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/controls': typeof ControlsRoute
+  '/react-hook-form': typeof ReactHookFormRoute
+  '/tanstack-form': typeof TanstackFormRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/controls': typeof ControlsRoute
+  '/react-hook-form': typeof ReactHookFormRoute
+  '/tanstack-form': typeof TanstackFormRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/controls': typeof ControlsRoute
+  '/react-hook-form': typeof ReactHookFormRoute
+  '/tanstack-form': typeof TanstackFormRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/controls'
+  fullPaths: '/' | '/controls' | '/react-hook-form' | '/tanstack-form'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/controls'
-  id: '__root__' | '/' | '/controls'
+  to: '/' | '/controls' | '/react-hook-form' | '/tanstack-form'
+  id: '__root__' | '/' | '/controls' | '/react-hook-form' | '/tanstack-form'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ControlsRoute: typeof ControlsRoute
+  ReactHookFormRoute: typeof ReactHookFormRoute
+  TanstackFormRoute: typeof TanstackFormRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ControlsRoute: ControlsRoute,
+  ReactHookFormRoute: ReactHookFormRoute,
+  TanstackFormRoute: TanstackFormRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,7 +135,9 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/controls"
+        "/controls",
+        "/react-hook-form",
+        "/tanstack-form"
       ]
     },
     "/": {
@@ -105,6 +145,12 @@ export const routeTree = rootRoute
     },
     "/controls": {
       "filePath": "controls.tsx"
+    },
+    "/react-hook-form": {
+      "filePath": "react-hook-form.tsx"
+    },
+    "/tanstack-form": {
+      "filePath": "tanstack-form.tsx"
     }
   }
 }

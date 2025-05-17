@@ -8,9 +8,11 @@ export const Route = createFileRoute("/")({
 
 function RouteComponent() {
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center gap-4 p-4">
+    <div className="flex min-h-screen w-full flex-col items-center justify-center gap-4 p-4">
       <div className="grid grid-cols-3 items-center gap-4">
-        <h2 className="text-4xl font-bold col-span-3 text-center">Base Components</h2>
+        <h2 className="col-span-3 text-center font-bold text-4xl">
+          Base Components
+        </h2>
         <Link
           to="/controls"
           className={cn(buttonVariants({ variant: "outline" }))}
@@ -18,13 +20,13 @@ function RouteComponent() {
           Controls
         </Link>
         <Link
-          to="/controls"
+          to="/react-hook-form"
           className={cn(buttonVariants({ variant: "outline" }))}
         >
           React Hook Form
         </Link>
         <Link
-          to="/controls"
+          to="/tanstack-form"
           className={cn(buttonVariants({ variant: "outline" }))}
         >
           TanStack Form
