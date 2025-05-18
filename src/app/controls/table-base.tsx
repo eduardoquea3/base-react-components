@@ -1,6 +1,6 @@
 import { DataTable } from "@/shared/components/ui/data-table"
-import { ColumnDef } from "@tanstack/react-table"
-import { useState } from "react"
+import { useDataTable } from "@/shared/hooks/useDataTable"
+import type { ColumnDef } from "@tanstack/react-table"
 
 interface Person {
   id: number
@@ -8,6 +8,13 @@ interface Person {
   age: number
   city: string
 }
+
+const data: Person[] = [
+  { id: 1, name: "Juan", age: 25, city: "Madrid" },
+  { id: 2, name: "Ana", age: 30, city: "Barcelona" },
+  { id: 3, name: "Luis", age: 22, city: "Valencia" },
+  { id: 4, name: "Marta", age: 28, city: "Sevilla" },
+]
 
 const columns: ColumnDef<Person>[] = [
   {
@@ -28,30 +35,17 @@ const columns: ColumnDef<Person>[] = [
   },
 ]
 
-const data: Person[] = [
-  { id: 1, name: "Ana", age: 28, city: "Madrid" },
-  { id: 2, name: "Luis", age: 34, city: "Barcelona" },
-  { id: 3, name: "María", age: 22, city: "Valencia" },
-  { id: 4, name: "Carlos", age: 45, city: "Sevilla" },
-]
-
 export default function TableBase() {
-  const [selectedRows, setSelectedRows] = useState<Person[]>([])
+  const table = useDataTable({
+    data,
+    columns,
+    showRows: 5,
+    enableRowSelection: false,
+    enableMultiRowSelection: false,
+    enableSorting: false,
+    enableFilters: false,
+    enableColumnVisibility: false,
+  })
 
-  return (
-    <div style={{ padding: 20 }}>
-      <h2>Ejemplo DataTable</h2>
-      <DataTable
-        data={data}
-        columns={columns}
-        showRows={5}
-        dataId="id"
-        onRowSelect={(rows) => setSelectedRows(rows)}
-      />
-      <div style={{ marginTop: 20 }}>
-        <h3>Filas seleccionadas:</h3>
-        <pre>{JSON.stringify(selectedRows, null, 2)}</pre>
-      </div>
-    </div>
-  )
+  return <DataTable table={table} isLoading={false} />
 }
