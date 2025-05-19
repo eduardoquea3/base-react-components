@@ -13,7 +13,7 @@ export function DataTableHeader<TData>({ table }: DataTableHeaderProps<TData>) {
             <th
               key={header.id}
               style={{ width: `${header.getSize()}px` }}
-              className="select-none border-border border-b bg-background/80 px-4 py-3 text-left font-semibold text-muted-foreground text-sm"
+              className="select-none border-border border-b bg-background/80 px-4 h-12 text-left font-semibold text-muted-foreground text-sm"
             >
               {header.isPlaceholder
                 ? null

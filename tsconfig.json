@@ -27,5 +27,5 @@
       "@types/*": ["./src/shared/types/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "types"]
 }

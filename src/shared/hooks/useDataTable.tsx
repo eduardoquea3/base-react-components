@@ -8,15 +8,16 @@ import {
   getSortedRowModel,
   PaginationState,
   Row,
+  RowData,
   SortingState,
-  useReactTable,
   VisibilityState,
+  useReactTable,
 } from "@tanstack/react-table"
 import { useState, useMemo } from "react"
 
 interface UseDataTableOptions<TData> {
   data: TData[]
-  columns: ColumnDef<TData>[]
+  columns: ColumnDef<TData, any>[]
   showRows?: number
   enableRowSelection?: boolean
   enableMultiRowSelection?: boolean
@@ -26,17 +27,19 @@ interface UseDataTableOptions<TData> {
   getRowCanExpand?: (row: Row<TData>) => boolean
 }
 
-export function useDataTable<TData>({
-  data,
+export function useDataTable<TData extends RowData & Record<string, any>>({
+  data: initialData,
   columns,
   showRows = 10,
-  enableRowSelection = true,
-  enableMultiRowSelection = true,
-  enableColumnVisibility = true,
-  enableSorting = true,
-  enableFilters = true,
+  enableRowSelection = false,
+  enableMultiRowSelection = false,
+  enableColumnVisibility = false,
+  enableSorting = false,
+  enableFilters = false,
   getRowCanExpand,
 }: UseDataTableOptions<TData>) {
+  const [data, setData] = useState<TData[]>(initialData)
+
   const tableData = useMemo(() => data ?? [], [data])
 
   const [pagination, setPagination] = useState<PaginationState>({
@@ -74,6 +77,17 @@ export function useDataTable<TData>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+
+    // ⬇ Aquí va el updateData expuesto a través de `meta`
+    meta: {
+      updateData: (rowIndex: number, columnId: string, value: unknown) => {
+        setData((old) =>
+          old.map((row, index) =>
+            index === rowIndex ? { ...row, [columnId]: value } : row,
+          ),
+        )
+      },
+    },
   })
 
   return table
