@@ -1,7 +1,9 @@
+import { Button } from "@/components/ui/button"
 import { DataTable } from "@/shared/components/ui/data-table"
 import { useDataTable } from "@/shared/hooks/useDataTable"
 import type { ColumnDef, Row } from "@tanstack/react-table"
-import { ChevronDown, ChevronRight } from "lucide-react"
+import { ArrowUpDown, ChevronDown, ChevronRight } from "lucide-react"
+import { useEffect, useState } from "react"
 
 interface Person {
   id: number
@@ -59,8 +61,6 @@ const columns: ColumnDef<Person>[] = [
         )}
       </button>
     ),
-    enableSorting: false,
-    enableColumnFilter: false,
     size: 30,
   },
   // las demás columnas
@@ -70,7 +70,18 @@ const columns: ColumnDef<Person>[] = [
   },
   {
     accessorKey: "name",
-    header: "Nombre",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nombre
+          <ArrowUpDown />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "age",
@@ -79,6 +90,24 @@ const columns: ColumnDef<Person>[] = [
   {
     accessorKey: "city",
     header: "Ciudad",
+    cell: ({ getValue, row, column, table }) => {
+      const initialValue = getValue()
+      const [value, setValue] = useState(initialValue)
+
+      useEffect(() => {
+        setValue(initialValue)
+      }, [initialValue])
+
+      return (
+        <input
+          value={value as string}
+          onChange={(e) => setValue(e.target.value)}
+          onBlur={() =>
+            table.options.meta?.updateData?.(row.index, column.id, value)
+          }
+        />
+      )
+    },
   },
 ]
 
@@ -87,25 +116,31 @@ export default function TableSubComponent() {
     data,
     columns,
     showRows: 5,
-    enableRowSelection: true,
-    enableMultiRowSelection: true,
     enableSorting: true,
-    enableFilters: true,
   })
 
   const renderSubComponent = ({ row }: { row: Row<Person> }) => {
     return (
       <div className="bg-gray-50 p-4 text-gray-700 text-sm">
-        <strong>Descripción:</strong> {row.original.description}
+        {/* <strong>Descripción:</strong> {row.original.description} */}
+        <pre>{JSON.stringify(row.original, null, 2)}</pre>
       </div>
     )
   }
 
+  const handleLogData = () => {
+    const tableData = table.getRowModel().rows.map((row) => row.original)
+    console.log("Datos actuales de la tabla:", tableData)
+  }
+
   return (
-    <DataTable
-      table={table}
-      isLoading={false}
-      renderSubComponent={renderSubComponent}
-    />
+    <div className="space-y-4">
+      <DataTable
+        table={table}
+        isLoading={false}
+        renderSubComponent={renderSubComponent}
+      />
+      <Button onClick={handleLogData}>Imprimir datos de la tabla</Button>
+    </div>
   )
 }
