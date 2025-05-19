@@ -9,8 +9,12 @@ export const Route = createFileRoute("/controls")({
 function RouteComponent() {
   return (
     <main className="flex min-h-screen w-full flex-col items-center gap-4 p-4">
-      <TableBase />
-      <TableSubComponent />
+      <div className="w-4/5">
+        <TableBase />
+      </div>
+      <div className="w-4/5">
+        <TableSubComponent />
+      </div>
     </main>
   )
 }
