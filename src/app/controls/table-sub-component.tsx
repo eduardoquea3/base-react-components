@@ -1,137 +1,154 @@
+import { useState, useEffect } from "react"
+import { ColumnDef, Row } from "@tanstack/react-table"
+import { ChevronDown, ChevronRight, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { DataTable } from "@/shared/components/ui/data-table"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { useDataTable } from "@/shared/hooks/useDataTable"
-import type { ColumnDef, Row } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, ChevronRight } from "lucide-react"
-import { useEffect, useState } from "react"
+import { DataTable } from "@/shared/components/ui/data-table"
 
-interface Person {
-  id: number
-  name: string
-  age: number
-  city: string
-  description: string
+interface Movement {
+  movementType: string
+  totalAmount: number
+  foundAmount: number
+  observation: string
 }
 
-const data: Person[] = [
+const initialData: Movement[] = [
   {
-    id: 1,
-    name: "Juan",
-    age: 25,
-    city: "Madrid",
-    description: "Juan es un desarrollador frontend que trabaja en Madrid.",
+    movementType: "Ingreso",
+    totalAmount: 1000,
+    foundAmount: 900,
+    observation: "Todo cuadra",
   },
   {
-    id: 2,
-    name: "Ana",
-    age: 30,
-    city: "Barcelona",
-    description: "Ana es diseñadora UX con 5 años de experiencia.",
-  },
-  {
-    id: 3,
-    name: "Luis",
-    age: 22,
-    city: "Valencia",
-    description: "Luis está estudiando ingeniería informática.",
-  },
-  {
-    id: 4,
-    name: "Marta",
-    age: 28,
-    city: "Sevilla",
-    description: "Marta trabaja como project manager en Sevilla.",
+    movementType: "Egreso",
+    totalAmount: 500,
+    foundAmount: 450,
+    observation: "Faltan 50",
   },
 ]
 
-const columns: ColumnDef<Person>[] = [
-  {
-    id: "expander", // id para esta columna de toggle
-    header: () => null, // no poner texto en header
-    cell: ({ row }) => (
-      <button
-        onClick={() => row.toggleExpanded()}
-        aria-label={row.getIsExpanded() ? "Collapse" : "Expand"}
-        className="p-1"
-      >
-        {row.getIsExpanded() ? (
-          <ChevronDown className="h-4 w-4" />
-        ) : (
-          <ChevronRight className="h-4 w-4" />
-        )}
-      </button>
-    ),
-    size: 30,
-  },
-  // las demás columnas
-  {
-    accessorKey: "id",
-    header: "ID",
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+export default function MovementTable() {
+  const columns: ColumnDef<Movement>[] = [
+    {
+      id: "expander",
+      header: () => null,
+      cell: ({ row }) => (
+        <button
+          onClick={() => row.toggleExpanded()}
+          className="p-1"
+          aria-label={row.getIsExpanded() ? "Collapse" : "Expand"}
         >
-          Nombre
-          <ArrowUpDown />
-        </Button>
-      )
+          {row.getIsExpanded() ? (
+            <ChevronDown className="h-4 w-4" />
+          ) : (
+            <ChevronRight className="h-4 w-4" />
+          )}
+        </button>
+      ),
     },
-  },
-  {
-    accessorKey: "age",
-    header: "Edad",
-  },
-  {
-    accessorKey: "city",
-    header: "Ciudad",
-    cell: ({ getValue, row, column, table }) => {
-      const initialValue = getValue()
-      const [value, setValue] = useState(initialValue)
-
-      useEffect(() => {
-        setValue(initialValue)
-      }, [initialValue])
-
-      return (
-        <input
-          value={value as string}
-          onChange={(e) => setValue(e.target.value)}
-          onBlur={() =>
-            table.options.meta?.updateData?.(row.index, column.id, value)
-          }
-        />
-      )
+    {
+      accessorKey: "movementType",
+      header: "Tipo de Movimiento",
     },
-  },
-]
+    {
+      accessorKey: "totalAmount",
+      header: "Total",
+    },
+    {
+      accessorKey: "foundAmount",
+      header: "Encontrado",
+      cell: ({ row, column, table }) => {
+        const externalValue = row.getValue<number>("foundAmount")
+        const [value, setValue] = useState(externalValue)
 
-export default function TableSubComponent() {
+        useEffect(() => {
+          setValue(externalValue)
+        }, [externalValue])
+
+        return (
+          <input
+            type="number"
+            value={value}
+            onChange={(e) => {
+              setValue(Number(e.target.value))
+              table.options.meta?.updateData?.(
+                row.index,
+                column.id,
+                Number(e.target.value),
+              )
+            }}
+            min={0}
+            className="w-20 border px-1"
+          />
+        )
+      },
+    },
+    {
+      id: "diference",
+      header: "Diferencia",
+      cell: ({ row }) => {
+        const total = row.getValue<number>("totalAmount")
+        const found = row.getValue<number>("foundAmount")
+        return total - found
+      },
+    },
+    {
+      accessorKey: "observation",
+      header: "Observación",
+      cell: ({ row, column, table }) => {
+        const [open, setOpen] = useState(false)
+        const [tempValue, setTempValue] = useState<string>(
+          row.getValue("observation") ?? "",
+        )
+
+        const saveObservation = () => {
+          table.options.meta?.updateData?.(row.index, column.id, tempValue)
+          setOpen(false)
+        }
+
+        return (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button variant="ghost" size="sm">
+                <Pencil className="w-4 h-4 mr-1" /> Editar
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <textarea
+                className="w-full border p-2"
+                rows={4}
+                value={tempValue}
+                onChange={(e) => setTempValue(e.target.value)}
+              />
+              <Button onClick={saveObservation}>Guardar</Button>
+            </DialogContent>
+          </Dialog>
+        )
+      },
+    },
+  ]
+
   const table = useDataTable({
-    data,
+    data: initialData,
     columns,
     showRows: 5,
     enableSorting: true,
+    getRowCanExpand: () => true,
   })
 
-  const renderSubComponent = ({ row }: { row: Row<Person> }) => {
-    return (
-      <div className="bg-gray-50 p-4 text-gray-700 text-sm">
-        {/* <strong>Descripción:</strong> {row.original.description} */}
-        <pre>{JSON.stringify(row.original, null, 2)}</pre>
-      </div>
+  const handleLogData = () => {
+    console.log(
+      "Movimientos actuales:",
+      table.getRowModel().rows.map((r) => r.original),
     )
   }
 
-  const handleLogData = () => {
-    const tableData = table.getRowModel().rows.map((row) => row.original)
-    console.log("Datos actuales de la tabla:", tableData)
-  }
+  const renderSubComponent = ({ row }: { row: Row<Movement> }) => (
+    <div className="bg-gray-100 p-4 text-sm text-gray-700">
+      <pre>{JSON.stringify(row.original, null, 2)}</pre>
+    </div>
+  )
 
   return (
     <div className="space-y-4">
