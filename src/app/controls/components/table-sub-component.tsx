@@ -111,7 +111,7 @@ export default function MovementTable() {
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button variant="ghost" size="sm">
-                <Pencil className="w-4 h-4 mr-1" /> Editar
+                <Pencil className="mr-1 h-4 w-4" /> Editar
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -145,7 +145,7 @@ export default function MovementTable() {
   }
 
   const renderSubComponent = ({ row }: { row: Row<Movement> }) => (
-    <div className="bg-gray-100 p-4 text-sm text-gray-700">
+    <div className="bg-gray-100 p-4 text-gray-700 text-sm">
       <pre>{JSON.stringify(row.original, null, 2)}</pre>
     </div>
   )
