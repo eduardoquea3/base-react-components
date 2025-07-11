@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as TanstackFormImport } from './routes/tanstack-form'
 import { Route as ReactHookFormImport } from './routes/react-hook-form'
+import { Route as NumpadDemoImport } from './routes/numpad-demo'
 import { Route as IndexImport } from './routes/index'
 import { Route as ControlsIndexImport } from './routes/controls/index'
 
@@ -27,6 +28,12 @@ const TanstackFormRoute = TanstackFormImport.update({
 const ReactHookFormRoute = ReactHookFormImport.update({
   id: '/react-hook-form',
   path: '/react-hook-form',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const NumpadDemoRoute = NumpadDemoImport.update({
+  id: '/numpad-demo',
+  path: '/numpad-demo',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -51,6 +58,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/numpad-demo': {
+      id: '/numpad-demo'
+      path: '/numpad-demo'
+      fullPath: '/numpad-demo'
+      preLoaderRoute: typeof NumpadDemoImport
       parentRoute: typeof rootRoute
     }
     '/react-hook-form': {
@@ -81,6 +95,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/numpad-demo': typeof NumpadDemoRoute
   '/react-hook-form': typeof ReactHookFormRoute
   '/tanstack-form': typeof TanstackFormRoute
   '/controls': typeof ControlsIndexRoute
@@ -88,6 +103,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/numpad-demo': typeof NumpadDemoRoute
   '/react-hook-form': typeof ReactHookFormRoute
   '/tanstack-form': typeof TanstackFormRoute
   '/controls': typeof ControlsIndexRoute
@@ -96,6 +112,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/numpad-demo': typeof NumpadDemoRoute
   '/react-hook-form': typeof ReactHookFormRoute
   '/tanstack-form': typeof TanstackFormRoute
   '/controls/': typeof ControlsIndexRoute
@@ -103,15 +120,27 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/react-hook-form' | '/tanstack-form' | '/controls'
+  fullPaths:
+    | '/'
+    | '/numpad-demo'
+    | '/react-hook-form'
+    | '/tanstack-form'
+    | '/controls'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/react-hook-form' | '/tanstack-form' | '/controls'
-  id: '__root__' | '/' | '/react-hook-form' | '/tanstack-form' | '/controls/'
+  to: '/' | '/numpad-demo' | '/react-hook-form' | '/tanstack-form' | '/controls'
+  id:
+    | '__root__'
+    | '/'
+    | '/numpad-demo'
+    | '/react-hook-form'
+    | '/tanstack-form'
+    | '/controls/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  NumpadDemoRoute: typeof NumpadDemoRoute
   ReactHookFormRoute: typeof ReactHookFormRoute
   TanstackFormRoute: typeof TanstackFormRoute
   ControlsIndexRoute: typeof ControlsIndexRoute
@@ -119,6 +148,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  NumpadDemoRoute: NumpadDemoRoute,
   ReactHookFormRoute: ReactHookFormRoute,
   TanstackFormRoute: TanstackFormRoute,
   ControlsIndexRoute: ControlsIndexRoute,
@@ -135,6 +165,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/numpad-demo",
         "/react-hook-form",
         "/tanstack-form",
         "/controls/"
@@ -142,6 +173,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/numpad-demo": {
+      "filePath": "numpad-demo.tsx"
     },
     "/react-hook-form": {
       "filePath": "react-hook-form.tsx"
