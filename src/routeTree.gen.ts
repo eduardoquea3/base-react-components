@@ -8,90 +8,38 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as TanstackFormRouteImport } from './routes/tanstack-form'
+import { Route as ReactHookFormRouteImport } from './routes/react-hook-form'
+import { Route as NumpadDemoRouteImport } from './routes/numpad-demo'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as ControlsIndexRouteImport } from './routes/controls/index'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as TanstackFormImport } from './routes/tanstack-form'
-import { Route as ReactHookFormImport } from './routes/react-hook-form'
-import { Route as NumpadDemoImport } from './routes/numpad-demo'
-import { Route as IndexImport } from './routes/index'
-import { Route as ControlsIndexImport } from './routes/controls/index'
-
-// Create/Update Routes
-
-const TanstackFormRoute = TanstackFormImport.update({
+const TanstackFormRoute = TanstackFormRouteImport.update({
   id: '/tanstack-form',
   path: '/tanstack-form',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const ReactHookFormRoute = ReactHookFormImport.update({
+const ReactHookFormRoute = ReactHookFormRouteImport.update({
   id: '/react-hook-form',
   path: '/react-hook-form',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const NumpadDemoRoute = NumpadDemoImport.update({
+const NumpadDemoRoute = NumpadDemoRouteImport.update({
   id: '/numpad-demo',
   path: '/numpad-demo',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const ControlsIndexRoute = ControlsIndexImport.update({
+const ControlsIndexRoute = ControlsIndexRouteImport.update({
   id: '/controls/',
   path: '/controls/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/numpad-demo': {
-      id: '/numpad-demo'
-      path: '/numpad-demo'
-      fullPath: '/numpad-demo'
-      preLoaderRoute: typeof NumpadDemoImport
-      parentRoute: typeof rootRoute
-    }
-    '/react-hook-form': {
-      id: '/react-hook-form'
-      path: '/react-hook-form'
-      fullPath: '/react-hook-form'
-      preLoaderRoute: typeof ReactHookFormImport
-      parentRoute: typeof rootRoute
-    }
-    '/tanstack-form': {
-      id: '/tanstack-form'
-      path: '/tanstack-form'
-      fullPath: '/tanstack-form'
-      preLoaderRoute: typeof TanstackFormImport
-      parentRoute: typeof rootRoute
-    }
-    '/controls/': {
-      id: '/controls/'
-      path: '/controls'
-      fullPath: '/controls'
-      preLoaderRoute: typeof ControlsIndexImport
-      parentRoute: typeof rootRoute
-    }
-  }
-}
-
-// Create and export the route tree
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -100,7 +48,6 @@ export interface FileRoutesByFullPath {
   '/tanstack-form': typeof TanstackFormRoute
   '/controls': typeof ControlsIndexRoute
 }
-
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/numpad-demo': typeof NumpadDemoRoute
@@ -108,16 +55,14 @@ export interface FileRoutesByTo {
   '/tanstack-form': typeof TanstackFormRoute
   '/controls': typeof ControlsIndexRoute
 }
-
 export interface FileRoutesById {
-  __root__: typeof rootRoute
+  __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/numpad-demo': typeof NumpadDemoRoute
   '/react-hook-form': typeof ReactHookFormRoute
   '/tanstack-form': typeof TanstackFormRoute
   '/controls/': typeof ControlsIndexRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
@@ -137,13 +82,52 @@ export interface FileRouteTypes {
     | '/controls/'
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   NumpadDemoRoute: typeof NumpadDemoRoute
   ReactHookFormRoute: typeof ReactHookFormRoute
   TanstackFormRoute: typeof TanstackFormRoute
   ControlsIndexRoute: typeof ControlsIndexRoute
+}
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/tanstack-form': {
+      id: '/tanstack-form'
+      path: '/tanstack-form'
+      fullPath: '/tanstack-form'
+      preLoaderRoute: typeof TanstackFormRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/react-hook-form': {
+      id: '/react-hook-form'
+      path: '/react-hook-form'
+      fullPath: '/react-hook-form'
+      preLoaderRoute: typeof ReactHookFormRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/numpad-demo': {
+      id: '/numpad-demo'
+      path: '/numpad-demo'
+      fullPath: '/numpad-demo'
+      preLoaderRoute: typeof NumpadDemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/controls/': {
+      id: '/controls/'
+      path: '/controls'
+      fullPath: '/controls'
+      preLoaderRoute: typeof ControlsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -153,39 +137,6 @@ const rootRouteChildren: RootRouteChildren = {
   TanstackFormRoute: TanstackFormRoute,
   ControlsIndexRoute: ControlsIndexRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/numpad-demo",
-        "/react-hook-form",
-        "/tanstack-form",
-        "/controls/"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/numpad-demo": {
-      "filePath": "numpad-demo.tsx"
-    },
-    "/react-hook-form": {
-      "filePath": "react-hook-form.tsx"
-    },
-    "/tanstack-form": {
-      "filePath": "tanstack-form.tsx"
-    },
-    "/controls/": {
-      "filePath": "controls/index.tsx"
-    }
-  }
-}
-ROUTE_MANIFEST_END */

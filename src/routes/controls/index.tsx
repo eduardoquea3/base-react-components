@@ -1,13 +1,11 @@
-// import TableBase from "@/app/controls/components/table-base"
-// import TableSubComponent from "@/app/controls/components/table-sub-component"
-// import { Button } from "@/components/ui/button"
-
 import { createFileRoute, Link } from "@tanstack/react-router";
+import Modal from "@/app/controls/components/modal";
 import {
 	Sidebar,
 	SidebarContainer,
 	SidebarPanel,
 } from "@/app/controls/components/sidebar";
+import { useModalStore } from "@/app/controls/store/modal.store";
 import { useSidebar } from "@/shared/hooks/useSidebar";
 
 export const Route = createFileRoute("/controls/")({
@@ -16,6 +14,7 @@ export const Route = createFileRoute("/controls/")({
 
 function RouteComponent() {
 	const { togglePosition, position } = useSidebar();
+	const { openModal } = useModalStore();
 
 	return (
 		<SidebarContainer>
@@ -35,6 +34,12 @@ function RouteComponent() {
 				>
 					Mover a {position === "left" ? "derecha" : "izquierda"}
 				</button>
+				<button
+					className="px-4 py-2 mt-2 bg-blue-500 text-white rounded"
+					onClick={() => openModal("example-modal")}
+				>
+					Abrir Modal
+				</button>
 			</Sidebar>
 			<SidebarPanel>
 				<h1 className="text-2xl font-bold mb-4">Contenido principal</h1>
@@ -44,6 +49,25 @@ function RouteComponent() {
 					sidebar.
 				</p>
 			</SidebarPanel>
+
+			<Modal id="example-modal" className="max-w-md" closeOnBackdrop={false}>
+				<h2 className="text-xl font-bold mb-4">Modal de Ejemplo</h2>
+				<p className="mb-4">
+					Este es un ejemplo de modal usando la etiqueta &lt;dialog&gt; nativa
+					de HTML y el store de Zustand.
+				</p>
+				<button
+					className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+					onClick={() => openModal("second-modal")}
+				>
+					Abrir otro modal
+				</button>
+			</Modal>
+
+			<Modal id="second-modal" className="max-w-sm">
+				<h2 className="text-lg font-bold mb-4">Segundo Modal</h2>
+				<p>Este es un segundo modal que se puede abrir desde el primero.</p>
+			</Modal>
 		</SidebarContainer>
 	);
 }
